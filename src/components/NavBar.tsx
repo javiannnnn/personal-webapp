@@ -30,7 +30,7 @@ export default function NavBar() {
           href={isAdmin ? '/admin' : '/'}
           className="font-pixel text-xl text-gold drop-shadow-[2px_2px_0_#2b1d10] sm:text-2xl"
         >
-          <span className="text-mario">▚</span> GLEN.OS
+          <span className="text-mario">▚</span> JAVIAN.OS
         </Link>
 
         {/* Desktop menu */}
