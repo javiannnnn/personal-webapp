@@ -18,11 +18,11 @@ const vt323 = VT323({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Glen V. — Player One',
-    template: '%s | Glen V.',
+    default: 'Javian — Player One',
+    template: '%s | Javian',
   },
   description:
-    'Personal portfolio of Glen V. — full-stack developer, retro gamer, and coin collector.',
+    'Personal portfolio of Javian — full-stack developer, retro gamer, and coin collector.',
 }
 
 export default function RootLayout({
@@ -37,7 +37,7 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <WarpBlock />
           <footer className="py-6 text-center font-crt text-lg text-cocoa/80">
-            © {new Date().getFullYear()} GLEN V. · INSERT COIN TO CONTINUE
+            INSERT COIN TO CONTINUE
             <span className="blink">_</span>
           </footer>
         </div>
