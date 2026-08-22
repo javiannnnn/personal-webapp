@@ -23,6 +23,24 @@ function revalidateAll() {
   revalidatePath('/', 'layout')
 }
 
+async function commit(
+  mutate: (portfolio: Parameters<typeof savePortfolio>[0]) => void,
+): Promise<ActionResult> {
+  try {
+    const portfolio = await getPortfolio()
+    mutate(portfolio)
+    await savePortfolio(portfolio)
+    revalidateAll()
+    return { ok: true }
+  } catch (error) {
+    return {
+      ok: false,
+      error:
+        error instanceof Error ? error.message : 'SAVE FAILED — try again.',
+    }
+  }
+}
+
 export async function login(
   formData: FormData,
 ): Promise<ActionResult | never> {
@@ -50,31 +68,25 @@ export async function logout(): Promise<void> {
 export async function saveAbout(about: About): Promise<ActionResult> {
   const denied = await requireAuth()
   if (denied) return denied
-  const portfolio = await getPortfolio()
-  portfolio.about = about
-  await savePortfolio(portfolio)
-  revalidateAll()
-  return { ok: true }
+  return commit((portfolio) => {
+    portfolio.about = about
+  })
 }
 
 export async function saveProjects(projects: Project[]): Promise<ActionResult> {
   const denied = await requireAuth()
   if (denied) return denied
-  const portfolio = await getPortfolio()
-  portfolio.projects = projects
-  await savePortfolio(portfolio)
-  revalidateAll()
-  return { ok: true }
+  return commit((portfolio) => {
+    portfolio.projects = projects
+  })
 }
 
 export async function saveSkills(skills: Skill[]): Promise<ActionResult> {
   const denied = await requireAuth()
   if (denied) return denied
-  const portfolio = await getPortfolio()
-  portfolio.skills = skills
-  await savePortfolio(portfolio)
-  revalidateAll()
-  return { ok: true }
+  return commit((portfolio) => {
+    portfolio.skills = skills
+  })
 }
 
 export async function saveExperiences(
@@ -82,9 +94,7 @@ export async function saveExperiences(
 ): Promise<ActionResult> {
   const denied = await requireAuth()
   if (denied) return denied
-  const portfolio = await getPortfolio()
-  portfolio.experiences = experiences
-  await savePortfolio(portfolio)
-  revalidateAll()
-  return { ok: true }
+  return commit((portfolio) => {
+    portfolio.experiences = experiences
+  })
 }

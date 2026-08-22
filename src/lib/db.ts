@@ -5,6 +5,120 @@ import type { Portfolio } from './types'
 const DATA_DIR = path.join(process.cwd(), 'data')
 const DATA_FILE = path.join(DATA_DIR, 'portfolio.json')
 
+/* GitHub storage (production): admin saves are committed straight to the repo,
+   so content survives serverless deploys. Falls back to the local file when
+   no token/repo is configured (local dev). */
+const GH_TOKEN = process.env.GITHUB_TOKEN || ''
+const GH_REPO =
+  process.env.GITHUB_REPO ||
+  (process.env.VERCEL_GIT_REPO_OWNER && process.env.VERCEL_GIT_REPO_SLUG
+    ? `${process.env.VERCEL_GIT_REPO_OWNER}/${process.env.VERCEL_GIT_REPO_SLUG}`
+    : '')
+const GH_BRANCH = process.env.GITHUB_BRANCH || 'main'
+const GH_PATH = 'data/portfolio.json'
+
+function githubEnabled(): boolean {
+  return Boolean(GH_TOKEN && GH_REPO)
+}
+
+function ghHeaders(): Record<string, string> {
+  return {
+    Authorization: `Bearer ${GH_TOKEN}`,
+    Accept: 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  }
+}
+
+async function ghGetFileMeta(): Promise<{ sha?: string; content?: string } | null> {
+  if (!githubEnabled()) return null
+  const url = `https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}?ref=${encodeURIComponent(
+    GH_BRANCH,
+  )}`
+  const res = await fetch(url, {
+    headers: ghHeaders(),
+    cache: 'no-store',
+  })
+  if (!res.ok) return null
+  return (await res.json()) as { sha?: string; content?: string }
+}
+
+async function ghCommitFile(portfolio: Portfolio): Promise<void> {
+  const meta = await ghGetFileMeta()
+  const res = await fetch(
+    `https://api.github.com/repos/${GH_REPO}/contents/${GH_PATH}`,
+    {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({
+        message: `admin: update portfolio content (${new Date().toISOString()})`,
+        content: Buffer.from(JSON.stringify(portfolio, null, 2), 'utf8').toString(
+          'base64',
+        ),
+        branch: GH_BRANCH,
+        ...(meta?.sha ? { sha: meta.sha } : {}),
+      }),
+    },
+  )
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '')
+    throw new Error(
+      `GitHub commit failed (${res.status}). Check GITHUB_TOKEN permissions. ${detail.slice(0, 180)}`,
+    )
+  }
+}
+
+function parsePortfolio(raw: string): Portfolio {
+  const parsed = JSON.parse(raw) as Partial<Portfolio>
+  return {
+    about: parsed.about ?? DEFAULT_PORTFOLIO.about,
+    projects: parsed.projects ?? [],
+    skills: parsed.skills ?? [],
+    experiences: parsed.experiences ?? [],
+  }
+}
+
+export async function getPortfolio(): Promise<Portfolio> {
+  // Production source of truth: the committed data file via the GitHub API.
+  try {
+    const remote = await ghGetFileMeta()
+    if (remote?.content && remote.sha) {
+      const raw = Buffer.from(remote.content, 'base64').toString('utf8')
+      return parsePortfolio(raw)
+    }
+  } catch {
+    // Fall through to local file below.
+  }
+
+  try {
+    const raw = await fs.readFile(DATA_FILE, 'utf8')
+    return parsePortfolio(raw)
+  } catch {
+    return DEFAULT_PORTFOLIO
+  }
+}
+
+export async function savePortfolio(portfolio: Portfolio): Promise<void> {
+  let fileWritten = false
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true })
+    await fs.writeFile(DATA_FILE, JSON.stringify(portfolio, null, 2), 'utf8')
+    fileWritten = true
+  } catch {
+    // Read-only filesystem (e.g. Vercel) — GitHub commit below is the real save.
+  }
+
+  if (githubEnabled()) {
+    await ghCommitFile(portfolio)
+  } else if (!fileWritten) {
+    throw new Error('No writable storage configured.')
+  }
+}
+
+export function newId(prefix: string): string {
+  return `${prefix}-${crypto.randomUUID().slice(0, 8)}`
+}
+
 export const DEFAULT_PORTFOLIO: Portfolio = {
   about: {
     displayName: 'Glen V.',
@@ -99,29 +213,4 @@ export const DEFAULT_PORTFOLIO: Portfolio = {
         'Shipped marketing sites and internal tools. First player to complete the agency onboarding quest in record time.',
     },
   ],
-}
-
-export async function getPortfolio(): Promise<Portfolio> {
-  try {
-    const raw = await fs.readFile(DATA_FILE, 'utf8')
-    const parsed = JSON.parse(raw) as Partial<Portfolio>
-    return {
-      about: parsed.about ?? DEFAULT_PORTFOLIO.about,
-      projects: parsed.projects ?? [],
-      skills: parsed.skills ?? [],
-      experiences: parsed.experiences ?? [],
-    }
-  } catch {
-    // Missing or corrupt file: fall back to seed data.
-    return DEFAULT_PORTFOLIO
-  }
-}
-
-export async function savePortfolio(portfolio: Portfolio): Promise<void> {
-  await fs.mkdir(DATA_DIR, { recursive: true })
-  await fs.writeFile(DATA_FILE, JSON.stringify(portfolio, null, 2), 'utf8')
-}
-
-export function newId(prefix: string): string {
-  return `${prefix}-${crypto.randomUUID().slice(0, 8)}`
 }

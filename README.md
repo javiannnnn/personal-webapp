@@ -24,7 +24,9 @@ Open http://localhost:3000.
 3. Set `NEXT_PUBLIC_CONTACT_EMAIL` to the email shown/used by the contact form.
 4. Visit `/admin`, log in, and edit your content.
 
-Your content lives in `data/portfolio.json` (seeded with sample data on first run — edit it via the admin console or replace it directly).
+Your content lives in `data/portfolio.json`. Locally that file is written directly. In production (Vercel), set `GITHUB_TOKEN` as an environment variable and admin saves are committed back to this repo via the GitHub API — so edits survive redeploys. Each save triggers a fresh deploy (~1 min); pages read the latest committed content live either way.
+
+> Token setup: GitHub → Settings → Developer settings → Fine-grained tokens → new token scoped to **this repo only**, permission **Contents: Read and write**.
 
 ## Build for production
 
