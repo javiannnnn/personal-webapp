@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# personal-webapp
 
-## Getting Started
+Personal portfolio site with a 90s retro-video-game theme (beige & brown, Pixelify Sans + VT323), built with Next.js 16, Tailwind CSS v4, and TypeScript.
 
-First, run the development server:
+## Features
+
+- **Public site**: Home start-screen intro, About Me, Projects (cards with GitHub links), Skills & Experience (game-style XP bars — click a skill to see projects that use it), Contact page.
+- **Admin area** (`/admin`): password-gated dashboard where you can edit your About, Projects, Skills, and Experience. Changes persist to `data/portfolio.json` and appear on the public site instantly.
+- **Mario background animation**: a pixel-art Mario walks along brick ground collecting gold coins on every page (respects `prefers-reduced-motion`).
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Admin access
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Copy `.env.example` to `.env.local`.
+2. Set `ADMIN_PASSWORD` to your own secret (default fallback in dev: `press-start-1985`).
+3. Set `NEXT_PUBLIC_CONTACT_EMAIL` to the email shown/used by the contact form.
+4. Visit `/admin`, log in, and edit your content.
 
-## Learn More
+Your content lives in `data/portfolio.json` (seeded with sample data on first run — edit it via the admin console or replace it directly).
 
-To learn more about Next.js, take a look at the following resources:
+## Build for production
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm run build
+npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> Note: content is stored as a JSON file on disk, which suits local/self-hosted deploys. For serverless platforms with read-only filesystems, move `src/lib/db.ts` to a database or CMS.

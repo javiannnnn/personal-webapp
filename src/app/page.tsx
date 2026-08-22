@@ -1,69 +1,106 @@
-import Image from "next/image";
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { getPortfolio } from '@/lib/db'
+import { PixelHeart } from '@/components/ui'
 
-export default function Home() {
+export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Player One',
+}
+
+function getExcerpt(bio: string) {
+  const firstParagraph = bio.split('\n\n')[0] ?? ''
+  const sentences = firstParagraph.match(/[^.!?]+[.!?]/g)
+  if (!sentences || sentences.length === 0) return firstParagraph.trim()
+  return sentences.slice(0, 2).join(' ').trim()
+}
+
+function MenuLink({
+  href,
+  glyph,
+  label,
+}: {
+  href: string
+  glyph: string
+  label: string
+}) {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <Link
+      href={href}
+      className="group flex w-full items-center border-4 border-bark bg-sand px-6 py-4 font-pixel text-xl text-bark shadow-pixel transition-colors hover:bg-gold focus-visible:bg-gold focus-visible:outline-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-pixel-sm sm:w-60"
+    >
+      <span
+        aria-hidden
+        className="w-6 shrink-0 text-left text-mario opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+      >
+        ►
+      </span>
+      <span className="flex flex-1 items-center justify-center gap-3 whitespace-nowrap">
+        <span aria-hidden>{glyph}</span>
+        {label}
+      </span>
+      <span aria-hidden className="w-6 shrink-0" />
+    </Link>
+  )
+}
+
+export default async function HomePage() {
+  const data = await getPortfolio()
+  const excerpt = getExcerpt(data.about.bio)
+  const level =
+    data.skills.length > 0
+      ? Math.round(
+          data.skills.reduce((sum, skill) => sum + skill.level, 0) /
+            data.skills.length
+        )
+      : 1
+
+  return (
+    <div className="flex flex-1 flex-col">
+      <div className="border-b-4 border-bark bg-cocoa">
+        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-8 gap-y-1 px-4 py-2 font-pixel text-sm text-gold sm:text-base">
+          <span className="flex items-center gap-2">
+            LIVES
+            <span className="flex gap-1">
+              <PixelHeart />
+              <PixelHeart />
+              <PixelHeart />
+            </span>
+          </span>
+          <span>PROJECTS ×{data.projects.length}</span>
+          <span>SKILLS ×{data.skills.length}</span>
+          <span>LV.{level}</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      <section className="flex flex-1 flex-col items-center justify-center px-4 py-16 text-center sm:py-20">
+        <div
+          aria-hidden
+          className="float-bob mb-8 flex h-14 w-14 items-center justify-center border-4 border-bark bg-gold font-pixel text-2xl text-bark shadow-pixel-sm"
+        >
+          ?
         </div>
-      </main>
+
+        <h1 className="max-w-3xl font-pixel text-4xl leading-tight text-brown drop-shadow-[3px_3px_0_rgba(43,29,16,0.25)] sm:text-6xl">
+          {data.about.displayName}
+        </h1>
+        <p className="mt-4 font-crt text-xl text-cocoa sm:text-2xl">
+          {data.about.tagline}
+        </p>
+        <p className="mx-auto mt-6 max-w-xl font-crt text-lg leading-relaxed text-cocoa/90 sm:text-xl">
+          {excerpt}
+        </p>
+
+        <div className="mt-10 flex w-full max-w-xs flex-col items-stretch gap-4 sm:w-auto sm:max-w-none sm:flex-row">
+          <MenuLink href="/projects" glyph="▶" label="START" />
+          <MenuLink href="/contact" glyph="✉" label="CONTACT" />
+        </div>
+
+        <p className="blink mt-12 font-pixel text-base text-brown sm:text-lg">
+          ▼ INSERT COIN · PRESS START ▼
+        </p>
+      </section>
     </div>
-  );
+  )
 }
