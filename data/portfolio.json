@@ -5,7 +5,63 @@
     "tagline": "IT pro · Player 1",
     "funFacts": []
   },
-  "projects": [],
+  "projects": [
+    {
+      "id": "677da08a-b50e-441a-b4ca-da6c53db7c77",
+      "title": "Cybersecurity Attack Classification Project",
+      "description": "Built machine learning models to do binary and multiclass classification on internet traffic, ",
+      "longDescription": "Built an end-to-end network intrusion detection pipeline for imbalanced cybersecurity traffic classification. Performed data preprocessing, class-imbalance handling with SMOTE and weighted classifiers, and trained multiple algorithms (Logistic Regression, Decision Tree, Random Forest, LightGBM) with Optuna hyperparameter optimization. Evaluated performance using class-balanced metrics, implemented ensemble methods, and developed cost-sensitive threshold analysis for deployment. Included production-monitoring protocols and responsible-AI considerations. Achieved 99.89% multiclass accuracy.",
+      "techStack": [
+        "Python",
+        "Machine Learning",
+        "Data Processing",
+        "Data Cleaning",
+        "Supervised Learning",
+        "Pandas"
+      ],
+      "githubUrl": "https://github.com/javiannnnn/cybersecurity-attack-detection"
+    },
+    {
+      "id": "473ba92b-c188-4009-99d5-12bd9a4626e1",
+      "title": "Text and Social Analytics Project",
+      "description": "Built end-to-end pipeline covering data scraping, processing, machine learning modelling and model evaluation. ",
+      "longDescription": "Developed a comprehensive end-to-end text and social media analytics pipeline encompassing data collection from online platforms, NLP preprocessing including tokenization, normalization, and noise removal, and feature extraction using vectorization techniques. Trained and evaluated comparative models using traditional machine learning approaches and transformer-based architectures (DistilBERT). Conducted performance evaluation using standard classification metrics (Accuracy, Precision, Recall, F1-Score) and confusion-matrix analysis. \n\nReceived distinction project award.",
+      "techStack": [
+        "Pandas",
+        "Data Processing",
+        "Supervised Learning",
+        "Data Scraping",
+        "BERT",
+        "Deep Learning",
+        "Data Cleaning",
+        "Sentiment Analysis",
+        "Machine Learning",
+        "NLP",
+        "Python"
+      ],
+      "githubUrl": "https://github.com/javiannnnn/text-and-social-analytics-project"
+    },
+    {
+      "id": "de244cf1-19bd-49d4-aeed-56c0ef698011",
+      "title": "Topic Modelling and Sentiment Classification Project",
+      "description": "Built end-to-end pipeline covering data preparation, sentiment classification and topic modelling. ",
+      "longDescription": "Developed an end-to-end text analytics pipeline encompassing data preparation, sentiment classification, and topic modelling. Project workflow included exploratory data analysis, text preprocessing and normalization, feature extraction using TF-IDF and embeddings, and training supervised machine learning models for sentiment prediction. Implemented topic discovery using Latent Dirichlet Allocation (LDA) to uncover latent themes across the corpus. Evaluated sentiment models using standard metrics (Accuracy, Precision, Recall, F1-Score) and provided interpretable topic visualizations for business insights.",
+      "techStack": [
+        "Pandas",
+        "Data Processing",
+        "Supervised Learning",
+        "Unsupervised Learning",
+        "BERT",
+        "Data Cleaning",
+        "Sentiment Analysis",
+        "Machine Learning",
+        "Topic Modelling",
+        "Python",
+        "NLP"
+      ],
+      "githubUrl": "https://github.com/javiannnnn/topic-modelling-and-sentiment-analysis"
+    }
+  ],
   "skills": [],
   "experiences": []
 }
