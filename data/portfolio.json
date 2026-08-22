@@ -1,19 +1,11 @@
 {
-    "projects":  [
-
-                 ],
-    "experiences":  [
-
-                    ],
-    "skills":  [
-
-               ],
-    "about":  {
-                  "bio":  "Seeded via storage migration test.",
-                  "displayName":  "Javian",
-                  "tagline":  "IT pro · Player 1",
-                  "funFacts":  [
-
-                               ]
-              }
+  "about": {
+    "bio": "testing",
+    "displayName": "Javian",
+    "tagline": "IT pro · Player 1",
+    "funFacts": []
+  },
+  "projects": [],
+  "skills": [],
+  "experiences": []
 }
