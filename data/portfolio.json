@@ -104,5 +104,13 @@
       "level": 84
     }
   ],
-  "experiences": []
+  "experiences": [
+    {
+      "id": "3dd81a07-93a1-48d6-a188-600835703ed7",
+      "role": "Vice President",
+      "company": "NYP Cloud",
+      "period": "Aug 2026 - Present",
+      "description": "Helped plan NYP x AWS Kiro Hackathon"
+    }
+  ]
 }
