@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Projects',
   description:
-    'Shipped games, side quests and open-source repos from the Glen V. arcade.',
+    'Shipped games, side quests and open-source repos from the Javian arcade.',
 }
 
 export default async function ProjectsPage() {

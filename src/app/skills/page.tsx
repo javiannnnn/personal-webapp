@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Skills & Experience',
   description:
-    'Player stats and level history — the skills Glen V. mains and the studios where the quests were completed.',
+    'Player stats and level history — the skills Javian mains and the studios where the quests were completed.',
 }
 
 const pipBase = 'absolute -left-8 top-6 h-4 w-4 border-[3px] border-bark'
