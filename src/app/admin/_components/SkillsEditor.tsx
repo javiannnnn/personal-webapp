@@ -23,11 +23,13 @@ export default function SkillsEditor({
   onDirtyChange,
 }: EditorProps<Skill[]>) {
   const [drafts, setDrafts] = useState<Skill[]>(initial)
-  const dirty = JSON.stringify(drafts) !== JSON.stringify(initial)
+  const [baseline, setBaseline] = useState<Skill[]>(initial)
+  const dirty = JSON.stringify(drafts) !== JSON.stringify(baseline)
   useDirtySync(dirty, onDirtyChange)
-  const { isPending, saved, error, save } = useSave(saveSkills, (next) =>
+  const { isPending, saved, error, save } = useSave(saveSkills, (next) => {
+    setBaseline(next)
     setDrafts(next)
-  )
+  })
 
   function update(id: string, patch: Partial<Omit<Skill, 'id'>>) {
     setDrafts((prev) =>

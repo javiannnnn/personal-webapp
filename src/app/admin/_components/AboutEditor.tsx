@@ -24,11 +24,13 @@ function normalize(about: About): About {
 
 export default function AboutEditor({ initial, onDirtyChange }: EditorProps<About>) {
   const [draft, setDraft] = useState<About>(initial)
-  const dirty = JSON.stringify(draft) !== JSON.stringify(initial)
+  const [baseline, setBaseline] = useState<About>(initial)
+  const dirty = JSON.stringify(draft) !== JSON.stringify(baseline)
   useDirtySync(dirty, onDirtyChange)
-  const { isPending, saved, error, save } = useSave(saveAbout, (next) =>
+  const { isPending, saved, error, save } = useSave(saveAbout, (next) => {
+    setBaseline(next)
     setDraft(next)
-  )
+  })
 
   function set<K extends keyof About>(key: K, value: About[K]) {
     setDraft((prev) => ({ ...prev, [key]: value }))

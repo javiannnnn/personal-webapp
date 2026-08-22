@@ -20,11 +20,13 @@ export default function ExperienceEditor({
   onDirtyChange,
 }: EditorProps<ExperienceItem[]>) {
   const [drafts, setDrafts] = useState<ExperienceItem[]>(initial)
-  const dirty = JSON.stringify(drafts) !== JSON.stringify(initial)
+  const [baseline, setBaseline] = useState<ExperienceItem[]>(initial)
+  const dirty = JSON.stringify(drafts) !== JSON.stringify(baseline)
   useDirtySync(dirty, onDirtyChange)
-  const { isPending, saved, error, save } = useSave(saveExperiences, (next) =>
+  const { isPending, saved, error, save } = useSave(saveExperiences, (next) => {
+    setBaseline(next)
     setDrafts(next)
-  )
+  })
 
   function update(id: string, patch: Partial<Omit<ExperienceItem, 'id'>>) {
     setDrafts((prev) =>

@@ -60,16 +60,20 @@ export default function ProjectsEditor({
   initial,
   onDirtyChange,
 }: EditorProps<Project[]>) {
-  const [baseline] = useState<DraftProject[]>(() => initial.map(toDraft))
+  const [baseline, setBaseline] = useState<DraftProject[]>(
+    () => initial.map(toDraft)
+  )
   const [drafts, setDrafts] = useState<DraftProject[]>(baseline)
   const [openIds, setOpenIds] = useState<Set<string>>(
     () => new Set(initial.slice(0, 1).map((project) => project.id))
   )
   const dirty = JSON.stringify(drafts) !== JSON.stringify(baseline)
   useDirtySync(dirty, onDirtyChange)
-  const { isPending, saved, error, save } = useSave(saveProjects, (next) =>
-    setDrafts(next.map(toDraft))
-  )
+  const { isPending, saved, error, save } = useSave(saveProjects, (next) => {
+    const normalized = next.map(toDraft)
+    setBaseline(normalized)
+    setDrafts(normalized)
+  })
 
   function update(id: string, patch: Patch) {
     setDrafts((prev) =>
