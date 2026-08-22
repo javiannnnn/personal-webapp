@@ -62,6 +62,42 @@
       "githubUrl": "https://github.com/javiannnnn/topic-modelling-and-sentiment-analysis"
     }
   ],
-  "skills": [],
+  "skills": [
+    {
+      "id": "5e1c6165-8423-437b-9cbf-4478748c5161",
+      "name": "Python",
+      "level": 94
+    },
+    {
+      "id": "c123c92c-cd2f-423b-9afc-d71a0528eee6",
+      "name": "Data Processing",
+      "level": 85
+    },
+    {
+      "id": "30fa2c41-f7b9-42d1-81bb-eefe0afd317d",
+      "name": "Machine Learning",
+      "level": 87
+    },
+    {
+      "id": "92b33d02-d92b-4d85-9b67-c66c36d33098",
+      "name": "NLP",
+      "level": 81
+    },
+    {
+      "id": "37f4ee3c-073c-4d28-b5f6-b06499d4c9ab",
+      "name": "Javascript",
+      "level": 75
+    },
+    {
+      "id": "68425200-8a2d-49dc-93a7-214a8d50b3e3",
+      "name": "Deep Learning",
+      "level": 82
+    },
+    {
+      "id": "4747ece3-6610-4c7c-b229-a5986ef42b53",
+      "name": "Full Stack Development",
+      "level": 85
+    }
+  ],
   "experiences": []
 }
