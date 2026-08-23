@@ -30,7 +30,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${pixelify.variable} ${vt323.variable}`}>
-      <body className="antialiased">
+      <body>
         <MarioBackground />
         <div className="relative z-10 flex min-h-screen flex-col">
           <NavBar />

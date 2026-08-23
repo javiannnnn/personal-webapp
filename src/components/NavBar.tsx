@@ -24,7 +24,7 @@ export default function NavBar() {
   const links = isAdmin ? ADMIN_LINKS : PUBLIC_LINKS
 
   return (
-    <header className="sticky top-0 z-20 border-b-4 border-bark bg-brown/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-20 border-b-4 border-bark bg-brown shadow-[inset_0_2px_0_0_rgba(255,248,221,0.35)]">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <Link
           href={isAdmin ? '/admin' : '/'}
@@ -44,9 +44,7 @@ export default function NavBar() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={`flex items-center gap-2 px-3 py-2 font-pixel text-sm transition-colors hover:text-gold ${
-                    active ? 'text-gold' : 'text-parchment'
-                  }`}
+                  className={`menu-item ${active ? 'menu-item-active' : ''}`}
                 >
                   {active && (
                     <span aria-hidden className="blink text-mario">
@@ -66,7 +64,7 @@ export default function NavBar() {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-label="Toggle menu"
-          className="panel bg-sand px-3 py-1 font-pixel text-sm text-bark md:hidden"
+          className="bevel-out bg-sand px-3 py-1 font-pixel text-sm text-bark active:shadow-[inset_2px_2px_0_0_rgba(43,29,16,0.6),inset_-2px_-2px_0_0_#fff8dd] md:hidden"
         >
           {open ? '× CLOSE' : '☰ MENU'}
         </button>

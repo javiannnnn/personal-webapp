@@ -38,6 +38,7 @@ const FRAME_WALK = [
 ]
 
 const PX = 3 // css pixels per sprite pixel
+const RES = 3 // css pixels per backing-store pixel — rendered low-res, upscaled nearest-neighbour
 const SPRITE_W = 12 * PX
 const SPRITE_H = 16 * PX
 const GROUND_H = 46
@@ -45,6 +46,11 @@ const SPEED = 55
 const JUMP_V = -520
 const GRAVITY = 1400
 const COIN_R = 10
+
+/** Snap a css-pixel coordinate to the backing-store grid so blocks stay crisp. */
+function snap(v: number) {
+  return Math.round(v / RES) * RES
+}
 
 type Coin = { x: number; y: number; baseY: number; phase: number; collected: boolean }
 type Sparkle = { x: number; y: number; vx: number; vy: number; life: number }
@@ -106,8 +112,8 @@ function drawCloud(ctx: CanvasRenderingContext2D, cloud: Cloud) {
       if (ch === '.') continue
       ctx.fillStyle = CLOUD_COLORS[ch]
       ctx.fillRect(
-        Math.round(cloud.x + col * s),
-        Math.round(cloud.y + row * s),
+        snap(cloud.x + col * s),
+        snap(cloud.y + row * s),
         Math.ceil(s),
         Math.ceil(s),
       )
@@ -133,7 +139,12 @@ function drawGround(ctx: CanvasRenderingContext2D, width: number, groundY: numbe
     const y = groundY + row * brickH
     const shift = row % 2 === 0 ? 0 : brickW / 2
     for (let col = startRow; col * brickW + shift < width + brickW; col++) {
-      ctx.fillRect(col * brickW + shift + 2, y + 2, brickW - 4, brickH - 4)
+      ctx.fillRect(
+        snap(col * brickW + shift + 2),
+        snap(y + 2),
+        snap(brickW - 4),
+        snap(brickH - 4),
+      )
     }
   }
   ctx.fillStyle = 'rgba(43,29,16,0.45)'
@@ -144,23 +155,24 @@ function drawCoin(ctx: CanvasRenderingContext2D, coin: Coin, t: number) {
   const spin = Math.abs(Math.cos(t * 3 + coin.phase))
   const rx = COIN_R * Math.max(0.18, spin)
   const bob = Math.sin(t * 2 + coin.phase) * 5
-  const y = coin.baseY + bob
+  const cx = snap(coin.x)
+  const y = snap(coin.baseY + bob)
 
   ctx.fillStyle = '#8a6414'
   ctx.beginPath()
-  ctx.ellipse(coin.x + 1.5, y + 1.5, rx, COIN_R, 0, 0, Math.PI * 2)
+  ctx.ellipse(cx + RES, y + RES, rx, COIN_R, 0, 0, Math.PI * 2)
   ctx.fill()
   ctx.fillStyle = '#ffc82c'
   ctx.beginPath()
-  ctx.ellipse(coin.x, y, rx, COIN_R, 0, 0, Math.PI * 2)
+  ctx.ellipse(cx, y, rx, COIN_R, 0, 0, Math.PI * 2)
   ctx.fill()
   ctx.fillStyle = '#ffe388'
   ctx.beginPath()
-  ctx.ellipse(coin.x, y, rx * 0.55, COIN_R * 0.62, 0, 0, Math.PI * 2)
+  ctx.ellipse(cx, y, rx * 0.55, COIN_R * 0.62, 0, 0, Math.PI * 2)
   ctx.fill()
   if (rx > COIN_R * 0.5) {
     ctx.fillStyle = '#c79a1d'
-    ctx.fillRect(coin.x - 1.5, y - COIN_R * 0.5, 3, COIN_R)
+    ctx.fillRect(cx - 1.5, y - COIN_R * 0.5, 3, COIN_R)
   }
 }
 
@@ -170,13 +182,15 @@ function drawMario(
   x: number,
   y: number,
 ) {
+  const sx = snap(x)
+  const sy = snap(y)
   for (let row = 0; row < frame.length; row++) {
     const line = frame[row]
     for (let col = 0; col < line.length; col++) {
       const ch = line[col]
       if (ch === '.') continue
       ctx.fillStyle = COLORS[ch]
-      ctx.fillRect(x + col * PX, y + row * PX, PX, PX)
+      ctx.fillRect(sx + col * PX, sy + row * PX, PX, PX)
     }
   }
 }
@@ -230,7 +244,7 @@ export default function MarioBackground() {
         }
         ctx.globalAlpha = Math.max(s.life / 30, 0)
         ctx.fillStyle = '#ffe388'
-        ctx.fillRect(s.x - 2, s.y - 2, 5, 5)
+        ctx.fillRect(snap(s.x) - 2, snap(s.y) - 2, 5, 5)
         ctx.globalAlpha = 1
       }
       const frame = !standStill && !jumping && legFrame ? FRAME_WALK : FRAME_STAND
@@ -246,14 +260,17 @@ export default function MarioBackground() {
     }
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2)
       width = window.innerWidth
       height = window.innerHeight
-      canvas.width = Math.round(width * dpr)
-      canvas.height = Math.round(height * dpr)
+      // Deliberately ignore devicePixelRatio: the scene is rendered at a
+      // fraction of screen resolution and upscaled with nearest-neighbour
+      // interpolation (see `image-rendering: pixelated`) for that
+      // early-2000s chunky look.
+      canvas.width = Math.max(1, Math.round(width / RES))
+      canvas.height = Math.max(1, Math.round(height / RES))
       canvas.style.width = `${width}px`
       canvas.style.height = `${height}px`
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.setTransform(1 / RES, 0, 0, 1 / RES, 0, 0)
       groundY = height - GROUND_H
       coinList = makeCoins(width, groundY)
       // Keep existing clouds where they are; only seed them once.
@@ -363,7 +380,7 @@ export default function MarioBackground() {
     <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
       <canvas ref={canvasRef} className="block opacity-70" />
       <div className="absolute left-4 top-20 flex items-center gap-2 font-pixel text-sm text-bark/70 sm:text-base">
-        <span className="inline-block h-4 w-4 rounded-full border-2 border-[#8a6414] bg-gold shadow-[inset_0_0_0_2px_#ffe388]" />
+        <span className="inline-block h-4 w-4 border-2 border-[#8a6414] bg-gold shadow-[inset_2px_2px_0_#ffe388]" />
         <span>× {String(score).padStart(2, '0')}</span>
       </div>
     </div>
