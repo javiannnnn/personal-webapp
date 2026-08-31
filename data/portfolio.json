@@ -9,7 +9,7 @@
     {
       "id": "677da08a-b50e-441a-b4ca-da6c53db7c77",
       "title": "Cybersecurity Attack Classification Project",
-      "description": "Built machine learning models to do binary and multiclass classification on internet traffic, ",
+      "description": "Built machine learning models to do binary and multiclass classification on internet traffic. ",
       "longDescription": "Built an end-to-end network intrusion detection pipeline for imbalanced cybersecurity traffic classification. Performed data preprocessing, class-imbalance handling with SMOTE and weighted classifiers, and trained multiple algorithms (Logistic Regression, Decision Tree, Random Forest, LightGBM) with Optuna hyperparameter optimization. Evaluated performance using class-balanced metrics, implemented ensemble methods, and developed cost-sensitive threshold analysis for deployment. Included production-monitoring protocols and responsible-AI considerations. Achieved 99.89% multiclass accuracy.",
       "techStack": [
         "Python",
@@ -44,7 +44,7 @@
     {
       "id": "d05b3ca5-4acc-4eda-8a16-7a24c2e8607f",
       "title": "ASL Alphabet Classification Project",
-      "description": "An ASL Alphabet Classification project that uses deep learning to recognise 29 American Sign Language hand signs from images. It compares a custom CNN with a fine-tuned EfficientNet-B0 model and deploys them in an interactive Flask webcam application.",
+      "description": "An ASL Alphabet Classification project that uses deep learning to recognise 29 American Sign Language hand signs from images. ",
       "longDescription": "Built two deep learning models, a from-scratch VGG style CNN and a fine tuned EfficientNet-B0 to classify images of ASL alphabets (29 classes, one for each letter, and another 3 for 'space', 'del' and 'nothing') using the 87k images dataset from Kaggle. The same data augmentation and preprocessing techniques were applied to both models such as using an 80/10/10 stratified train/validation/test split, were used for both models. The from-scratch CNN model achieving 99.99% accuracy while the fine-tuned EfficientNet-B0 model achieved 99.91% accuracy, on a held-out test set.",
       "techStack": [
         "Python",
@@ -61,7 +61,7 @@
     {
       "id": "ed635212-ecbd-4f02-bf49-3c0584e19db8",
       "title": "AG News Classification Project",
-      "description": "Built a deep learning news text classifier for the AG News Dataset, categorising article titles and descriptions into World, Sports, Business and Sci/Tech. Compared a GloVE + BiLSTM model with a fine-tuned DistilBERT transformer, achieving 94.1% accuracy with DistilBERT,",
+      "description": "Built a deep learning news text classifier for the AG News Dataset, categorising article titles and descriptions into World, Sports, Business and Sci/Tech. ",
       "longDescription": "This project develops and evaluates two deep-learning approaches for multiclass news classification using the AG News dataset. The workflow includes data cleaning, exploratory data analysis, text preprocessing, and model training on 120,000 news articles, with evaluation on a 7,600-article test set.\n\nThe first model uses frozen 100-dimensional GloVe embeddings with a bidirectional LSTM, while the second fine-tunes the distilbert-base-uncased transformer. Both models are assessed using accuracy, macro F1-score, per-class metrics, confusion matrices, training curves, learned-representation visualisations, error analysis, and inference-time comparisons. DistilBERT achieved 94.1% test accuracy and a 0.94 macro F1-score, outperforming the BiLSTM while requiring substantially more parameters and compute. The project highlights the practical trade-off between model accuracy and deployment efficiency.",
       "techStack": [
         "Python",
