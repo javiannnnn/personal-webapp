@@ -82,7 +82,7 @@
     {
       "id": "5e1c6165-8423-437b-9cbf-4478748c5161",
       "name": "Python",
-      "level": 94
+      "level": 98
     },
     {
       "id": "c123c92c-cd2f-423b-9afc-d71a0528eee6",
@@ -92,7 +92,7 @@
     {
       "id": "30fa2c41-f7b9-42d1-81bb-eefe0afd317d",
       "name": "Machine Learning",
-      "level": 87
+      "level": 94
     },
     {
       "id": "92b33d02-d92b-4d85-9b67-c66c36d33098",
@@ -111,13 +111,48 @@
     },
     {
       "id": "4747ece3-6610-4c7c-b229-a5986ef42b53",
-      "name": "Full Stack Development",
+      "name": "Pandas",
       "level": 85
     },
     {
       "id": "74d6e598-30bb-4f53-aa46-215373af0263",
       "name": "SQL",
       "level": 84
+    },
+    {
+      "id": "6f38db28-afcb-4787-a920-a2e32ebc256d",
+      "name": "Data Cleaning",
+      "level": 89
+    },
+    {
+      "id": "82b6f3ad-46f9-4c52-8b33-9e6a2c5e9ace",
+      "name": "Supervised Learning",
+      "level": 89
+    },
+    {
+      "id": "504e5d1e-fa4e-4da4-b46a-86931baa3028",
+      "name": "Topic Modelling",
+      "level": 85
+    },
+    {
+      "id": "7df9c473-de15-46d2-ae72-122a4ad7de10",
+      "name": "Sentiment Analysis",
+      "level": 92
+    },
+    {
+      "id": "19a5c425-98b7-494a-96a6-49d4abec72b6",
+      "name": "Tensorflow",
+      "level": 87
+    },
+    {
+      "id": "14b6b993-36fc-4079-97e8-66289884a1f7",
+      "name": "PyTorch",
+      "level": 91
+    },
+    {
+      "id": "199608ff-be1a-4824-a824-d3f5234e0cc3",
+      "name": "Computer Vision",
+      "level": 90
     }
   ],
   "experiences": [
