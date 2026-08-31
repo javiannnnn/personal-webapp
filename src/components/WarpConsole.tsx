@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Panel } from '@/components/ui'
 
 type Destination = { keywords: string[]; label: string; href: string; hash?: string }
 
@@ -47,60 +46,82 @@ export default function WarpConsole() {
   }
 
   return (
-    <Panel>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          warp(value)
-        }}
-        className="flex flex-col gap-4 sm:flex-row"
-      >
-        <label htmlFor="warp-input" className="sr-only">
-          Type a destination
-        </label>
-        <input
-          id="warp-input"
-          type="text"
-          autoFocus
-          autoComplete="off"
-          placeholder="TYPE A WORLD NAME…"
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value)
-            setError(null)
+    <div className="relative border-4 border-[#123a22] bg-term-bg p-5 sm:p-6 shadow-[6px_6px_0_0_var(--color-smb-shadow)]">
+      <div className="term relative">
+        {/* Window chrome */}
+        <div className="mb-5 flex items-center justify-between border-b border-term-dim pb-3">
+          <span className="font-pixel text-[0.7rem] tracking-widest text-term-amber">
+            JAVIAN.OS — WARP SHELL
+          </span>
+          <span className="flex gap-2" aria-hidden>
+            <span className="h-2.5 w-2.5 bg-term-red shadow-[0_0_6px_var(--color-term-red)]" />
+            <span className="h-2.5 w-2.5 bg-term-amber shadow-[0_0_6px_var(--color-term-amber)]" />
+            <span className="h-2.5 w-2.5 bg-term-green shadow-[0_0_6px_var(--color-term-green)]" />
+          </span>
+        </div>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            warp(value)
           }}
-          className="flex-1 border-4 border-bark bg-parchment px-3 py-2 font-crt text-xl text-cocoa placeholder:text-cocoa/40 focus:bg-white focus:outline-none"
-        />
-        <button
-          type="submit"
-          className="border-4 border-bark bg-mario px-5 py-2 font-pixel text-sm tracking-wider text-parchment shadow-pixel-sm transition-all duration-100 hover:bg-bark hover:text-gold active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
+          className="flex flex-col gap-3 sm:flex-row"
         >
-          ► WARP
-        </button>
-      </form>
+          <label htmlFor="warp-input" className="sr-only">
+            Type a destination
+          </label>
+          <div className="flex flex-1 items-center gap-2 border-2 border-term-dim bg-[#020503] px-3 focus-within:border-term-green">
+            <span aria-hidden className="font-pixel text-lg text-term-green">
+              &gt;
+            </span>
+            <input
+              id="warp-input"
+              type="text"
+              autoFocus
+              autoComplete="off"
+              spellCheck={false}
+              placeholder="TYPE A WORLD NAME…"
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value)
+                setError(null)
+              }}
+              className="w-full bg-transparent py-2 font-pixel text-lg tracking-wider text-term-green caret-term-green placeholder:text-term-green-dim focus:outline-none"
+            />
+            <span aria-hidden className="term-caret hidden sm:inline-block" />
+          </div>
+          <button
+            type="submit"
+            className="border-2 border-term-green bg-term-green/10 px-6 py-2 font-pixel text-base tracking-widest text-term-green shadow-[0_0_8px_rgba(59,255,110,0.35)] transition-all hover:bg-term-green hover:text-term-bg active:translate-y-[2px] active:shadow-none"
+          >
+            ▶ EXEC
+          </button>
+        </form>
 
-      {error && (
-        <p role="alert" className="mt-4 font-pixel text-sm text-mario">
-          {error}
+        {error && (
+          <p role="alert" className="mt-4 font-pixel text-sm tracking-wide text-term-red">
+            <span aria-hidden className="mr-2">✗</span>
+            {error}
+          </p>
+        )}
+
+        <p className="mt-6 font-pixel text-sm tracking-wider text-term-amber">
+          &gt; ACCEPTED WARP CODES:
         </p>
-      )}
-
-      <p className="mt-6 font-crt text-xl text-cocoa/90">
-        Accepted warp codes:
-      </p>
-      <ul className="mt-2 flex flex-wrap gap-2">
-        {DESTINATIONS.map((dest) => (
-          <li key={dest.label}>
-            <button
-              type="button"
-              onClick={() => warp(dest.keywords[0])}
-              className="border-[3px] border-bark bg-sand px-3 py-1.5 font-pixel text-xs tracking-wider text-bark shadow-pixel-sm transition-all duration-100 hover:bg-gold active:translate-x-[3px] active:translate-y-[3px] active:shadow-none"
-            >
-              {dest.label}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </Panel>
+        <ul className="mt-3 flex flex-wrap gap-2">
+          {DESTINATIONS.map((dest) => (
+            <li key={dest.label}>
+              <button
+                type="button"
+                onClick={() => warp(dest.keywords[0])}
+                className="border border-term-green-dim px-3 py-1.5 font-pixel text-xs tracking-widest text-term-green transition-colors hover:border-term-green hover:bg-term-green hover:text-term-bg focus-visible:outline-none focus-visible:border-term-green"
+              >
+                {dest.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   )
 }

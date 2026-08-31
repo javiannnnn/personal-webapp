@@ -55,6 +55,7 @@ function snap(v: number) {
 type Coin = { x: number; y: number; baseY: number; phase: number; collected: boolean }
 type Sparkle = { x: number; y: number; vx: number; vy: number; life: number }
 type Cloud = { x: number; y: number; scale: number; speed: number }
+type Pipe = { x: number; height: number; width: number }
 
 function makeCoins(width: number, groundY: number): Coin[] {
   const count = Math.max(3, Math.floor(width / 230))
@@ -80,6 +81,17 @@ function makeClouds(width: number, height: number): Cloud[] {
     y: 50 + Math.random() * Math.min(height * 0.28, 220),
     scale: 0.75 + Math.random() * 0.6,
     speed: 1.5 + Math.random() * 2,
+  }))
+}
+
+/* A few green pipes growing out of the ground, spread across the level. */
+function makePipes(width: number): Pipe[] {
+  const count = Math.max(1, Math.floor(width / 520))
+  const span = Math.max(1, width / count)
+  return Array.from({ length: count }, (_, i) => ({
+    x: i * span + span * (0.2 + Math.random() * 0.35),
+    height: 56 + Math.random() * 46,
+    width: 42 + Math.random() * 12,
   }))
 }
 
@@ -151,6 +163,51 @@ function drawGround(ctx: CanvasRenderingContext2D, width: number, groundY: numbe
   ctx.fillRect(0, groundY, width, 3)
 }
 
+/* Classic SMB green pipe: wide cap on top, narrower shaft below, light
+   highlight on the left and a darker shade on the right, dark rim. */
+function drawPipe(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  groundY: number,
+  height: number,
+  width: number,
+) {
+  const pipeW = Math.round(width)
+  const pipeH = Math.round(height)
+  const capH = Math.min(22, Math.round(pipeH * 0.3))
+  const capW = pipeW + 12
+  const cx = Math.round(x)
+  const top = groundY - pipeH
+
+  // rest-of-pipe green shades (authentic SMB greens)
+  const lit = '#43b047'
+  const mid = '#2c7a2e'
+  const hi = '#78e070'
+  const rim = 'rgba(0,0,0,0.5)'
+
+  // shaft (narrower) sits under the cap
+  const shaftX = cx + (capW - pipeW) / 2
+  const shaftTop = top + capH
+  ctx.fillStyle = mid
+  ctx.fillRect(shaftX, shaftTop, pipeW, groundY - shaftTop)
+  ctx.fillStyle = lit
+  ctx.fillRect(shaftX, shaftTop, pipeW * 0.45, groundY - shaftTop)
+  ctx.fillStyle = rim
+  ctx.fillRect(shaftX + pipeW - 4, shaftTop, 4, groundY - shaftTop)
+
+  // cap — wider, with stepped blocky corners
+  ctx.fillStyle = mid
+  ctx.fillRect(cx, top, capW, capH)
+  ctx.fillStyle = lit
+  ctx.fillRect(cx, top, capW * 0.45, capH)
+  ctx.fillStyle = hi
+  ctx.fillRect(cx, top, capW * 0.45, capH * 0.42)
+  ctx.fillStyle = rim
+  ctx.fillRect(cx, top, capW, 4)
+  ctx.fillRect(cx + capW - 4, top, 4, capH)
+  ctx.fillRect(cx, top + capH - 4, capW, 4)
+}
+
 function drawCoin(ctx: CanvasRenderingContext2D, coin: Coin, t: number) {
   const spin = Math.abs(Math.cos(t * 3 + coin.phase))
   const rx = COIN_R * Math.max(0.18, spin)
@@ -217,6 +274,7 @@ export default function MarioBackground() {
     let jumping = false
     let coinList: Coin[] = []
     let cloudList: Cloud[] = []
+    let pipeList: Pipe[] = []
     const sparkles: Sparkle[] = []
     let last = performance.now()
     let t = 0
@@ -229,6 +287,9 @@ export default function MarioBackground() {
       drawSky(ctx, width, groundY)
       for (const cloud of cloudList) drawCloud(ctx, cloud)
       drawGround(ctx, width, groundY, scrollX)
+      for (const pipe of pipeList) {
+        drawPipe(ctx, pipe.x, groundY, pipe.height, pipe.width)
+      }
       for (const coin of coinList) {
         if (!coin.collected || standStill) drawCoin(ctx, coin, t)
       }
@@ -255,6 +316,9 @@ export default function MarioBackground() {
       t = 1.2
       marioX = Math.min(Math.max(width * 0.72, 40), width - SPRITE_W - 20)
       drawGround(ctx, width, groundY, 0)
+      for (const pipe of pipeList) {
+        drawPipe(ctx, pipe.x, groundY, pipe.height, pipe.width)
+      }
       for (const coin of coinList) drawCoin(ctx, coin, t)
       drawMario(ctx, FRAME_STAND, marioX, groundY - SPRITE_H)
     }
@@ -279,6 +343,7 @@ export default function MarioBackground() {
         const maxY = 50 + Math.min(height * 0.28, 220)
         for (const c of cloudList) c.y = Math.min(c.y, maxY)
       }
+      pipeList = makePipes(width)
       if (reduced) drawStatic()
     }
 
@@ -298,6 +363,16 @@ export default function MarioBackground() {
           cloud.x = width + 20
           cloud.y = 50 + Math.random() * Math.min(height * 0.28, 220)
           cloud.scale = 0.75 + Math.random() * 0.6
+        }
+      }
+
+      // Pipes ride the ground and scroll past with the world
+      for (const pipe of pipeList) {
+        pipe.x -= SPEED * dt
+        if (pipe.x + pipe.width + 12 < 0) {
+          pipe.x = width + 12 + Math.random() * 80
+          pipe.height = 56 + Math.random() * 46
+          pipe.width = 42 + Math.random() * 12
         }
       }
 

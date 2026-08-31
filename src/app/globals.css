@@ -15,6 +15,27 @@
   --color-pipe: #3d8b4f;
   --color-life: #e2574c;
 
+  /* Classic Super Mario / NES 8-bit scene — the world behind the arcade. */
+  --color-smb-sky: #5c94fc;
+  --color-smb-sky-deep: #3b78f0;
+  --color-smb-brick: #b5854e;
+  --color-smb-brick-less: #96683a;
+  --color-smb-pipe: #43b047;
+  --color-smb-pipe-dark: #2c7a2e;
+  --color-smb-cream: #fdf6e3;
+  --color-smb-cloud: #dcc496;
+  --color-smb-shadow: #14100b;
+
+  /* Green-on-black CRT terminal — the console inside the arcade. */
+  --color-term-bg: #05080a;
+  --color-term-panel: #0a1210;
+  --color-term-green: #3bff6e;
+  --color-term-green-dim: #1f9e46;
+  --color-term-green-glow: #6cff97;
+  --color-term-amber: #ffcf5c;
+  --color-term-red: #ff5b5b;
+  --color-term-dim: #1d3326;
+
   --font-pixel: var(--font-pixelify), monospace;
   --font-crt: var(--font-vt323), monospace;
 
@@ -182,9 +203,46 @@ canvas {
   animation: float-bob 2.4s steps(4) infinite;
 }
 
+/* CRT terminal: green phosphor text over a deep green-black glass, with a
+   faint scanline aperture like an old monitor. */
+.term {
+  font-family: var(--font-crt), monospace;
+  color: var(--color-term-green);
+  text-shadow:
+    0 0 6px var(--color-term-green-glow),
+    0 0 1px var(--color-term-green);
+  letter-spacing: 0.02em;
+}
+.term::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.22) 3px,
+    transparent 4px
+  );
+}
+
+/* Block cursor that blinks like a prompt caret. */
+.term-caret {
+  display: inline-block;
+  height: 1.1em;
+  width: 0.6em;
+  margin-left: 0.15em;
+  vertical-align: text-bottom;
+  background: var(--color-term-green);
+  box-shadow: 0 0 8px var(--color-term-green-glow);
+  animation: blink-caret 1s steps(1) infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .blink,
-  .float-bob {
+  .float-bob,
+  .term-caret {
     animation: none;
   }
 }
