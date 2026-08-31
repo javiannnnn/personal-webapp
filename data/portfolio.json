@@ -153,6 +153,11 @@
       "id": "199608ff-be1a-4824-a824-d3f5234e0cc3",
       "name": "Computer Vision",
       "level": 90
+    },
+    {
+      "id": "853b176a-575b-4116-87ce-0a4b6e0d539d",
+      "name": "BERT",
+      "level": 95
     }
   ],
   "experiences": [
